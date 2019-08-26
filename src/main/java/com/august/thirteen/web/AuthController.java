@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.august.thirteen.dto.AcessTokenDto;
 import com.august.thirteen.dto.Userdto;
 import okhttp3.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,16 +21,27 @@ public class AuthController {
             = MediaType.get("application/json; charset=utf-8");
     OkHttpClient client = new OkHttpClient();
 
+    @Value("${acessToken.setClient_id}")
+    private String setClient_id ;
+    @Value("${acessToken.setClient_secret}")
+    private String setClient_secret ;
+    @Value("${acessToken.setRedirect_uri}")
+    private String setRedirect_uri ;
+    @Value("${access_token.uri}")
+    private String accessUri ;
+    @Value("${userApi.uri}")
+    private String userUri ;
+
     @GetMapping(value = "/callback" )
     public String callBack(@RequestParam(name = "code") String code,
                            @RequestParam(name = "state") String state) throws IOException {
 
         AcessTokenDto acessToken = new AcessTokenDto();
-        acessToken.setClient_id("a90828f5dc0af80a2e7c");
-        acessToken.setClient_secret("ba982bc485859f5cf1e314433e09b5c98f111c58");
+        acessToken.setClient_id(setClient_id);
+        acessToken.setClient_secret(setClient_secret);
         acessToken.setCode(code);
         acessToken.setState(state);
-        acessToken.setRedirect_uri("http://localhost:8081/callback");
+        acessToken.setRedirect_uri(setRedirect_uri);
 
         String token = getAccessToken(acessToken);
         Userdto user = getUserByToken(token);
@@ -43,7 +55,7 @@ public class AuthController {
         Object json = JSONObject.toJSON(acessToken);
         RequestBody body = RequestBody.create(JSON, json.toString());
         Request request = new Request.Builder()
-                .url("https://github.com/login/oauth/access_token")
+                .url(accessUri)
                 .post(body)
                 .build();
         String token=null;
@@ -61,7 +73,7 @@ public class AuthController {
 
     private Userdto getUserByToken(String token) throws IOException{
         Request request1 = new Request.Builder()
-                .url("https://api.github.com/user?access_token="+token)
+                .url(userUri+"?access_token="+token)
                 .build();
 
         try (Response response = client.newCall(request1).execute()) {
