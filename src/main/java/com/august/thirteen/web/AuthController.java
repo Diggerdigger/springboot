@@ -3,7 +3,10 @@ package com.august.thirteen.web;
 import com.alibaba.fastjson.JSONObject;
 import com.august.thirteen.dto.AcessTokenDto;
 import com.august.thirteen.dto.Userdto;
+import com.august.thirteen.mapper.UserMapper;
+import com.august.thirteen.model.UserModel;
 import okhttp3.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 public class AuthController {
@@ -32,6 +36,8 @@ public class AuthController {
     private String accessUri ;
     @Value("${userApi.uri}")
     private String userUri ;
+    @Autowired
+    private UserMapper userMapper;
 
     @GetMapping(value = "/callback" )
     public String callBack(@RequestParam(name = "code") String code,
@@ -51,6 +57,11 @@ public class AuthController {
         System.out.println(user.getLogin());
         if (user!=null){
             request.getSession().setAttribute("user",user);
+            UserModel userModel = new UserModel();
+            userModel.setToken(UUID.randomUUID().toString());
+            userModel.setLogin(user.getLogin());
+            userModel.setNode_id(user.getNode_id());
+            userMapper.insert(userModel);
             return "redirect:/";
         }else{
             return "redirect:/";
