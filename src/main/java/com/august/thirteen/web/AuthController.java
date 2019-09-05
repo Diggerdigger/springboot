@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +35,9 @@ public class AuthController {
 
     @GetMapping(value = "/callback" )
     public String callBack(@RequestParam(name = "code") String code,
-                           @RequestParam(name = "state") String state) throws IOException {
+                           @RequestParam(name = "state") String state,
+                           HttpServletRequest request
+                           ) throws IOException {
 
         AcessTokenDto acessToken = new AcessTokenDto();
         acessToken.setClient_id(setClient_id);
@@ -46,8 +49,12 @@ public class AuthController {
         String token = getAccessToken(acessToken);
         Userdto user = getUserByToken(token);
         System.out.println(user.getLogin());
-
-        return "index";
+        if (user!=null){
+            request.getSession().setAttribute("user",user);
+            return "redirect:/";
+        }else{
+            return "redirect:/";
+        }
     }
 
 
