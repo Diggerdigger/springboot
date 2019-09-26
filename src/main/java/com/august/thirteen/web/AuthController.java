@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +44,8 @@ public class AuthController {
     @GetMapping(value = "/callback" )
     public String callBack(@RequestParam(name = "code") String code,
                            @RequestParam(name = "state") String state,
-                           HttpServletRequest request
+                           HttpServletRequest request,
+                           HttpServletResponse response
                            ) throws IOException {
 
         AcessTokenDto acessToken = new AcessTokenDto();
@@ -56,12 +59,13 @@ public class AuthController {
         Userdto user = getUserByToken(token);
         System.out.println(user.getLogin());
         if (user!=null){
-            request.getSession().setAttribute("user",user);
+            //request.getSession().setAttribute("user",user);
             UserModel userModel = new UserModel();
             userModel.setToken(UUID.randomUUID().toString());
             userModel.setLogin(user.getLogin());
             userModel.setNode_id(user.getNode_id());
             userMapper.insert(userModel);
+            response.addCookie(new Cookie("token",userModel.getToken()));
             return "redirect:/";
         }else{
             return "redirect:/";
