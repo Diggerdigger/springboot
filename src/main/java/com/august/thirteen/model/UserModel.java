@@ -1,5 +1,7 @@
 package com.august.thirteen.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class UserModel {
     private String token;
     private String login;

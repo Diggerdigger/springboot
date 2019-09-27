@@ -20,23 +20,27 @@ public class WebController {
         @GetMapping(value = "/" )
     public String index(HttpServletRequest request){
         Cookie[] cookies = request.getCookies();
-        for (Cookie c:cookies) {
-            if ( c.getName().equals("token")){
-                String token = c.getValue();
-                System.out.println(token);
-                UserModel user=userMapper.findUserByToken(token);
-                request.getSession().setAttribute("user",user);
-                break;
-            }
+        if(cookies!=null){
+            for (Cookie c:cookies) {
+                if ( c.getName().equals("token")){
+                    String token = c.getValue();
+                    System.out.println(token);
+                    UserModel user=userMapper.findUserByToken(token);
+                    request.getSession().setAttribute("user",user);
+                    break;
+                }
 
+            }
         }
+
         return "index";
     }
 
     @GetMapping(value = "/test" )
     @ResponseBody
     public String test(){
-        String s="3333333333333333";
+            int i=1/0;
+        String s="ccccccccccccccccccccccccc";
         return s;
     }
 
