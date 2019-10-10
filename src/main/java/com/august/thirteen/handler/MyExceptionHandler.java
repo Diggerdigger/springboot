@@ -2,12 +2,13 @@ package com.august.thirteen.handler;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@ControllerAdvice
+@ControllerAdvice /* @RestControllerAdvice返回model，处理ajax请求错误*/
 public class MyExceptionHandler {
 
     public static final String ERROR_VIEW="errorPage";
