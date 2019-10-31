@@ -1,4 +1,6 @@
 https://chiclaim.blog.csdn.net/article/details/101778619
+https://leetcode-cn.com/
+https://www.nowcoder.com/
 
 位bit 字节Byte(8bit) 字
 
@@ -42,3 +44,19 @@ attributes_count & attributes   attribute_info 可用于 ClassFile, field_info, 
 
 我们可以通过 -XX:+TraceClassLoading 来监控类的加载情况
 查看 bytecodeInterpreter.cpp 文件的时候，发现通过 -XX:+TraceClassResolution 可以跟踪类的解析情况。
+运行的时候加上 -verbose:gc 运行参数：查看垃圾回收情况
+
+Java 虚拟机提供了 5 条方法调用的指令：
+invokestatic：调用静态方法。
+invokespecial：调用实例构造方法、私有方法和父类构造方法。
+invokevirtual：调用所有虚方法。invokevirtual 指令用来调用具有多态性方法的，也就是说能够被覆写的方法.
+invokeinterface：调用接口方法，在运行时在确定一个实现此接口的对象。
+invokedynamic：在运行时动态解析出调用点(CallSite)限定符所引用的方法，然后在执行该方法。前面 4 个用于方法调用的指令，
+分派的逻辑都是固化在虚拟机内部的， 而 invokedynamic 指令的分派由用户所设定的引导方法决定。（分派就是寻找合适的方法）
+
+方法重载解析（Method Overload Resolution）：意思是重载方法的调用在编译器就已经确定了调用哪个方法。
+对于 Fruit apple = new Apple(); Fruit 称之为静态类型，静态类型在编译期可知，所以也可以叫做编译期类型。后面的 Apple 称之为实际类型，
+在运行期可知，所以也可以称之为运行时类型。
+方法重载解析 是在编译期通过静态类型去匹配重载的方法。因为上面的静态类型都是 Fruit 所以调用的都是 sell(Fruit fruit) 这个方法。
+
+方法重载解析 是在编译期确定方法调用的版本。动态分配是在运行时确定方法的版本。例如方法的覆写(override)，也就是类的多态性相关。

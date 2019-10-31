@@ -10,7 +10,7 @@ public class test {
     private  String test(){
 
         String a="SSSS";
-
+        Character x=null;
         String intern = a.intern();
         return "hhhhh";
     }
